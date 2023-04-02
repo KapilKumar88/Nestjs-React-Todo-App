@@ -8,6 +8,7 @@ import appConfig from './config/app.config';
 import jwtConfig from './config/jwt.config';
 import { ValidateEmail } from './custom_validations/validateEmail.validation';
 import { UserService } from './modules/user/user.service';
+import { AuthenticationModule } from './modules/authentication/authentication.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserService } from './modules/user/user.service';
       load: [appConfig, jwtConfig],
       isGlobal: true,
     }),
+    AuthenticationModule,
     UserModule,
     PrismaModule,
   ],

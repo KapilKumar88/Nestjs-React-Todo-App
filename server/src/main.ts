@@ -12,6 +12,7 @@ async function bootstrap() {
     .setDescription('Todo Application')
     .setVersion('1.0')
     .addServer('http://localhost:3000/', 'LocalServer')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -54,4 +54,12 @@ export class UserService {
     });
     return result > 0 ? true : false;
   }
+
+  findByEmail(email: string): Promise<User> {
+    return this.prismaService.user.findFirst({
+      where: {
+        email,
+      },
+    });
+  }
 }
