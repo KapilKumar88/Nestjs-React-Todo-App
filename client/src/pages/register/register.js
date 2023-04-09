@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { enqueueSnackbar } from 'notistack';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,15 +9,23 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { register } from '../../services/auth.service';
 
 const Register = () => {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const handleSubmit = async (event) => {
+        try {
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            const result = await register({
+                name: data.get('full_name'),
+                email: data.get('email'),
+                password: data.get('password'),
+            });
+            localStorage.setItem('access_token', result.accessToken);
+            enqueueSnackbar(result.message, { variant: 'success'});
+        } catch (error) {
+            enqueueSnackbar(error?.response?.data?.message ?? 'Error occurred', { variant: 'error' });
+        } 
     };
 
     return (
@@ -42,7 +51,7 @@ const Register = () => {
                         fullWidth
                         id="name"
                         label="Full Name"
-                        name="name"
+                        name="full_name"
                         autoFocus
                     />
                     <TextField

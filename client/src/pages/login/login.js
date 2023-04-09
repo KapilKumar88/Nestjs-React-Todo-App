@@ -10,15 +10,23 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { enqueueSnackbar } from 'notistack';
+import { login } from '../../services/auth.service';
 
 const Login = () => {
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const handleSubmit = async (event) => {
+        try {
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            const result = await login({
+                email: data.get('email'),
+                password: data.get('password'),
+            });
+            localStorage.setItem('access_token', result?.data?.accessToken);
+            enqueueSnackbar(result?.data?.message, { variant: 'success' });
+        } catch (error) {
+            enqueueSnackbar(error?.response?.data?.message ?? 'Error occurred', { variant: 'error' });
+        }
     };
 
     return (

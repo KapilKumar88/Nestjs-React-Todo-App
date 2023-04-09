@@ -15,7 +15,7 @@ export class AuthenticationService {
   async register(payload: RegisterDto) {
     const salt = await bcrypt.genSalt();
     const hashPwd = await bcrypt.hash(payload.password, salt);
-    await this.userService.create({
+    const result = await this.userService.create({
       name: payload.name,
       email: payload.email,
       password: hashPwd,
@@ -23,11 +23,17 @@ export class AuthenticationService {
     return {
       success: true,
       message: 'Register successfully',
+      accessToken: await this.jwtService.signAsync({
+        sub: result.userId,
+      }),
     };
   }
 
   async login(payload: LoginDto) {
     const result = await this.userService.findByEmail(payload.email);
+    if (result === null) {
+      throw new UnauthorizedException('Invalid emailId and password');
+    }
     const isMatch = await bcrypt.compare(payload.password, result.password);
 
     if (!isMatch) {

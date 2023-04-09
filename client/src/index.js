@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider } from '@mui/system';
 import CssBaseline from '@mui/material/CssBaseline';
+import { SnackbarProvider } from 'notistack';
 import { RouterProvider } from "react-router-dom";
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -13,8 +14,10 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <RouterProvider router={router} />
-      <App />
+      <SnackbarProvider  maxSnack={4}  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+        <RouterProvider router={router} />
+        <App />
+      </SnackbarProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
